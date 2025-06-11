@@ -1,33 +1,28 @@
-import { PlusCircle, ClipboardText } from "phosphor-react";
-import { useCallback, useMemo, useEffect, useState } from "react";
+import { Plus, ClipboardText } from "phosphor-react";
+import { useMemo, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import styles from "./app.module.css";
 import { Header } from "./components/Header";
 import { Task } from "./components/Task";
+import { TaskProps } from "./types/Task";
+import { ToastContainer, toast } from "react-toastify";
 
 const data = [
   {
     id: uuidv4(),
     title: "Tarefa 1",
-    isDeleted: false,
     isCompleted: false,
   },
   {
     id: uuidv4(),
     title: "Tarefa 2",
-    isDeleted: false,
     isCompleted: false,
   },
 ];
 
 export function App() {
-  const [tasks, setTasks] = useState<any>();
+  const [tasks, setTasks] = useState<TaskProps[]>(data);
   const [newTask, setNewTask] = useState("");
-  const [totalCompleted, setTotalCompleted] = useState(0)
-
-  useEffect(() => {
-   setTasks(data) 
-  })
 
   const handleNewTaskChange = (event: any) => {
     event.preventDefault();
@@ -42,48 +37,61 @@ export function App() {
       {
         id: uuidv4(),
         title: newTask,
-        isDeleted: false,
         isCompleted: false,
       },
     ]);
+
     setNewTask("");
+
+    toast.success("Tarefa criada com sucesso", {
+      autoClose: 1000,
+      hideProgressBar: false,
+      closeButton: false,
+    });
   };
 
   const completeTask = (id: string) => {
-    const tasksWithoutCompleteOne = tasks.map((task) =>
-      task.id === id ? { ...task, isCompleted: true } : task
+    setTasks((prevTasks) =>
+      prevTasks.map((task) =>
+        task.id === id ? { ...task, isCompleted: !task.isCompleted } : task
+      )
     );
-
-    setTasks(tasksWithoutCompleteOne);
   };
 
   const deleteTask = (id: string) => {
-    const taskssWithoutDeleteOne = tasks.filter((task) => task.id !== id);
-
-    setTasks(taskssWithoutDeleteOne);
+    const filteredTasks = tasks.filter((task) => task.id !== id);
+    setTasks(filteredTasks);
+    toast.info("Tarefa removida", {
+      autoClose: 1000,
+      hideProgressBar: false,
+      closeButton: false,
+    });
   };
 
-  useEffect(() => {
-    tasks.map((task) => task.isCompleted === true && setTotalCompleted(totalCompleted + 1));
-  }, [totalCompleted])
-
-  
+  const totalCompleted = useMemo(() => {
+    return tasks.filter((task) => task.isCompleted).length;
+  }, [tasks]);
 
   return (
     <>
       <Header />
       <main className={styles.wrapper}>
-        <form className={styles.newText} onSubmit={handleCreateTask}>
+        <form className={styles.taskForm} onSubmit={handleCreateTask}>
           <input
             type="text"
             placeholder="Adicione uma tarefa"
+            aria-label="Adicione uma tarefa"
             value={newTask}
             onChange={handleNewTaskChange}
             required
           />
-          <button type="submit">
-            Criar
-            <PlusCircle size={20} />
+          <button type="submit" className={styles.addButton}>
+            <Plus
+              size={20}
+              style={{
+                cursor: "pointer",
+              }}
+            />
           </button>
         </form>
         <div className={styles.content}>
@@ -105,6 +113,7 @@ export function App() {
               tasks.map((task) => (
                 <Task
                   id={task.id}
+                  key={task.id}
                   checked={task.isCompleted}
                   title={task.title}
                   onComplete={completeTask}
@@ -121,6 +130,7 @@ export function App() {
           </div>
         </div>
       </main>
+      <ToastContainer />
     </>
   );
 }

@@ -15,14 +15,14 @@ export function Task({ checked, title, id, onComplete, onDelete }: any) {
       <div>
         <input
           type="checkbox"
-          id="task"
+          id={`task-${id}`}
           name="task"
           checked={checked}
-          onClick={handleCompleteTask}
+          onChange={handleCompleteTask}
         />
-        <label htmlFor="task">{title}</label>
+        <label htmlFor={`task-${id}`}>{title}</label>
       </div>
-      <button type="button" onClick={handleDeleteTask}>
+      <button type="button" onClick={handleDeleteTask} style={{ cursor: "pointer" }}>
         <Trash size={24} />
       </button>
     </div>
