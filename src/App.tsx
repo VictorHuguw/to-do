@@ -1,4 +1,4 @@
-import { Plus, ClipboardText } from "phosphor-react";
+import { PlusCircle, ClipboardText } from "phosphor-react";
 import { useMemo, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import styles from "./app.module.css";
@@ -86,7 +86,8 @@ export function App() {
             required
           />
           <button type="submit" className={styles.addButton}>
-            <Plus
+            Criar
+            <PlusCircle
               size={20}
               style={{
                 cursor: "pointer",

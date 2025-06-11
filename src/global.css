@@ -36,6 +36,3 @@ body, input, textarea, button {
   line-height: 1.4;
 }
 
-html body button {
-  all: unset !important;
-}

@@ -23,11 +23,11 @@
   border: 1px solid var(--gray-700);
 }
 
-.taskForm input:focus {
+.addButton input:focus {
   color: var(--gray-100);
 }
 
-.taskForm button {
+.addButton {
   border-radius: 8px;
   border: 0;
   cursor: pointer;
@@ -42,7 +42,7 @@
   transition: background 0.1s;
 }
 
-.taskForm button:hover {
+.addButton button:hover {
   background: var(--blue-300);
 }
 
